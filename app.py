@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output, dash_table
+from dash import dcc, html, Input, Output, State, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
@@ -212,7 +212,7 @@ table_style_cell = {
 
 dropdown_style = {
     'backgroundColor': '#222228',
-    'color': '#000000' # Plotly dropdowns are notoriously hard to style without pure CSS, so keeping text dark for visibility.
+    'color': '#000000'
 }
 
 def apply_theme(fig):
@@ -233,10 +233,10 @@ def apply_theme(fig):
             title_font=dict(color='#FFFFFF')
         ),
         title=dict(font=dict(color='#FFFFFF')),
-        legend=dict(font=dict(color='#8A8A93'))
+        legend=dict(font=dict(color='#8A8A93')),
+        clickmode='event+select' # Important for cross-filtering
     )
     
-    # Check trace types to apply specific styles
     for trace in fig.data:
         if isinstance(trace, go.Scatter):
             trace.line.shape = 'spline'
@@ -245,7 +245,6 @@ def apply_theme(fig):
             if not trace.fill:
                 trace.fill = 'tozeroy'
         elif isinstance(trace, go.Bar):
-            # Using marker_line_width=0 for cleaner look
             trace.marker.line.width = 0
         elif isinstance(trace, go.Scatterpolar):
             trace.line.shape = 'spline'
@@ -287,7 +286,7 @@ def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
             html.Div([
-                html.Label("Filter by Program:", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                html.Label("Filter by Program (Click on any chart to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
                 dcc.Dropdown(
                     id='supply-program-filter',
                     options=[{'label': i, 'value': i} for i in programs],
@@ -339,7 +338,7 @@ def render_content(tab):
     elif tab == 'tab-2':
         return html.Div([
             html.Div([
-                html.Label("Filter by Job Title:", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                html.Label("Filter by Job Title (Click on any chart to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
                 dcc.Dropdown(
                     id='demand-job-filter',
                     options=[{'label': i, 'value': i} for i in job_titles],
@@ -412,7 +411,67 @@ def render_content(tab):
         ])
 
 # ------------------------------------------------------------------------------
-# Tab 1 Cross-Filtering Callbacks
+# Cross-Filtering Interactivity Callbacks (Click on Chart -> Update Dropdown)
+# ------------------------------------------------------------------------------
+@app.callback(
+    Output('supply-program-filter', 'value'),
+    [Input('fig-graduates', 'clickData'),
+     Input('fig-tuition', 'clickData'),
+     Input('fig-employment', 'clickData')],
+    [State('supply-program-filter', 'value')],
+    prevent_initial_call=True
+)
+def cross_filter_tab1_clicks(clk_grad, clk_tuit, clk_emp, current_selection):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise dash.exceptions.PreventUpdate
+    prop_id = ctx.triggered[0]['prop_id']
+    click_data = None
+    
+    if 'fig-graduates' in prop_id: click_data = clk_grad
+    elif 'fig-tuition' in prop_id: click_data = clk_tuit
+    elif 'fig-employment' in prop_id: click_data = clk_emp
+        
+    if click_data and 'points' in click_data:
+        try:
+            program = click_data['points'][0]['customdata'][0]
+            # Toggle logic: if already the only one selected, reset to all.
+            if len(current_selection) == 1 and current_selection[0] == program:
+                return programs
+            return [program]
+        except (KeyError, IndexError):
+            pass
+    raise dash.exceptions.PreventUpdate
+
+@app.callback(
+    Output('demand-job-filter', 'value'),
+    [Input('fig-open-pos', 'clickData'),
+     Input('fig-salary', 'clickData')],
+    [State('demand-job-filter', 'value')],
+    prevent_initial_call=True
+)
+def cross_filter_tab2_clicks(clk_open, clk_sal, current_selection):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise dash.exceptions.PreventUpdate
+    prop_id = ctx.triggered[0]['prop_id']
+    click_data = None
+    
+    if 'fig-open-pos' in prop_id: click_data = clk_open
+    elif 'fig-salary' in prop_id: click_data = clk_sal
+        
+    if click_data and 'points' in click_data:
+        try:
+            job = click_data['points'][0]['customdata'][0]
+            if len(current_selection) == 1 and current_selection[0] == job:
+                return job_titles
+            return [job]
+        except (KeyError, IndexError):
+            pass
+    raise dash.exceptions.PreventUpdate
+
+# ------------------------------------------------------------------------------
+# Tab Rendering Callbacks
 # ------------------------------------------------------------------------------
 @app.callback(
     [Output('fig-graduates', 'figure'),
@@ -429,21 +488,20 @@ def update_tab1(selected_programs):
     filtered_emp = df_employment[df_employment['Program'].isin(selected_programs)]
     filtered_curr = df_curriculum[df_curriculum['Program'].isin(selected_programs)]
     
-    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Program', markers=True, title='Graduates Trend by Program (USA)', color_discrete_sequence=THEME_PALETTE)
+    # Notice custom_data=['Program'] added to all charts so we can extract it in clickData
+    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Program', custom_data=['Program'], markers=True, title='Graduates Trend by Program (USA)', color_discrete_sequence=THEME_PALETTE)
     fig_grad = apply_theme(fig_grad)
     
     df_tuit = filtered_supply[filtered_supply['Year'] == 2023]
-    fig_tuit = px.bar(df_tuit, x='Program', y='Tuition_USD', color='Program', title='Average Tuition Fees (2023)', color_discrete_sequence=THEME_PALETTE)
+    fig_tuit = px.bar(df_tuit, x='Program', y='Tuition_USD', color='Program', custom_data=['Program'], title='Average Tuition Fees (2023)', color_discrete_sequence=THEME_PALETTE)
     fig_tuit = apply_theme(fig_tuit)
     
-    fig_emp = px.bar(filtered_emp, x='Program', y='Employed_Pct', color='Year_Post_Grad', barmode='group', title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
+    fig_emp = px.bar(filtered_emp, x='Program', y='Employed_Pct', color='Year_Post_Grad', barmode='group', custom_data=['Program'], title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
     fig_emp = apply_theme(fig_emp)
     
     return fig_grad, fig_tuit, fig_emp, filtered_curr.to_dict('records')
 
-# ------------------------------------------------------------------------------
-# Tab 2 Cross-Filtering Callbacks
-# ------------------------------------------------------------------------------
+
 @app.callback(
     [Output('fig-open-pos', 'figure'),
      Output('fig-salary', 'figure'),
@@ -458,10 +516,10 @@ def update_tab2(selected_jobs):
     filtered_skills = df_demand_skills[df_demand_skills['Job_Title'].isin(selected_jobs)]
     filtered_salary = df_salary[df_salary['Job_Title'].isin(selected_jobs)]
     
-    fig_open = px.line(filtered_demand, x='Year', y='Open_Positions', color='Job_Title', markers=True, title='Open Positions Over Time', color_discrete_sequence=THEME_PALETTE)
+    fig_open = px.line(filtered_demand, x='Year', y='Open_Positions', color='Job_Title', custom_data=['Job_Title'], markers=True, title='Open Positions Over Time', color_discrete_sequence=THEME_PALETTE)
     fig_open = apply_theme(fig_open)
     
-    fig_sal = px.bar(filtered_salary, x='Job_Title', y='Avg_Salary_USD', color='Experience_Level', barmode='group', title='Average Salary by Experience', color_discrete_sequence=THEME_PALETTE)
+    fig_sal = px.bar(filtered_salary, x='Job_Title', y='Avg_Salary_USD', color='Experience_Level', barmode='group', custom_data=['Job_Title'], title='Average Salary by Experience', color_discrete_sequence=THEME_PALETTE)
     fig_sal = apply_theme(fig_sal)
     
     skill_agg = filtered_skills.groupby('Skill')['Demand_Score'].mean().reset_index().sort_values('Demand_Score', ascending=True)
@@ -470,9 +528,7 @@ def update_tab2(selected_jobs):
     
     return fig_open, fig_sal, fig_req
 
-# ------------------------------------------------------------------------------
-# Tab 3 Gap Analysis Callback
-# ------------------------------------------------------------------------------
+
 @app.callback(
     [Output('fig-mismatch', 'figure'),
      Output('fig-radar', 'figure')],
@@ -510,7 +566,6 @@ def update_tab3(tab):
     ))
     
     fig_radar = apply_theme(fig_radar)
-    # Re-override polar specific background
     fig_radar.update_layout(
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 100], gridcolor='#2A2A32'),
