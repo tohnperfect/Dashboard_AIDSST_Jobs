@@ -1,0 +1,261 @@
+<!doctype html>
+<html class="overflow-hidden" lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1">
+<title>all Hiring</title>
+<meta name="description" content="The career platform for coders, builders, hackers and makers.">
+<link rel="canonical" href="https://foorilla.com/hiring/">
+<link href="/s/css/style.min.css?v=1.9.8" rel="stylesheet">
+<link rel="shortcut icon" href="/s/img/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-180x180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-60x60.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/s/img/favicon-192x192.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/s/img/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/s/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/s/img/favicon-16x16.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="foo🦍 ~/all Hiring">
+<meta property="og:description" content="The career platform for coders, builders, hackers and makers.">
+<meta property="og:url" content="https://foorilla.com/hiring/">
+<meta property="og:site_name" content="foo🦍">
+<meta property="og:image" content="https://scrn.foorilla.com/img/aHR0cHM6Ly9mb29yaWxsYS5jb20vaGlyaW5nLw.png">
+
+<script src="/s/js/chart.js?v=1.9.8"></script>
+<script>
+var currentTheme = localStorage.getItem('theme');
+if (currentTheme) { document.documentElement.dataset.bsTheme = currentTheme; }
+else { currentTheme = 'dark'; }
+function updateLayoutHeight() {
+  const head1 = document.getElementById('head1');
+  const head2 = document.getElementById('head2');
+  const hh = (head1?.offsetHeight || 0) + (head2?.offsetHeight || 0);
+  const wh = window.innerHeight;
+  const side1h = wh - hh - 4;
+  const mainh = wh - hh - 4;
+  document.documentElement.style.setProperty('--content-height-side1', `${side1h}px`);
+  document.documentElement.style.setProperty('--content-height-main', `${mainh}px`);
+}
+window.addEventListener('resize', updateLayoutHeight);
+window.addEventListener('orientationchange', updateLayoutHeight);
+window.addEventListener('DOMContentLoaded', updateLayoutHeight);
+function handlePrimaryListItems() {
+  items = document.querySelectorAll('.list-group-item');
+  items.forEach(item => {
+    item.addEventListener('click', function(event) {
+      items.forEach(i => i.classList.remove('bg-primary-subtle'));
+      this.classList.add('bg-primary-subtle');
+    });
+  });
+}
+function showSearchListLoading(event) {
+  const target = event.detail.target;
+  if (!target) return;
+  target.classList.add('opacity-50');
+  target.setAttribute('aria-busy', 'true');
+}
+document.addEventListener('htmx:beforeRequest', function(event) {
+  const target = event.detail.target;
+  window.setTimeout(() => {
+    if (!target || target.children.length || target.textContent.trim() !== '...') return;
+    target.innerHTML = '<span class="loading-dots">...</span>';
+  }, 0);
+}, true);
+</script>
+<script src="/s/django_htmx/htmx-2.min.js" defer></script>
+<link href="/s/django_tomselect/vendor/tom-select/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<link href="/s/django_tomselect/css/django-tomselect.css" rel="stylesheet">
+<script src="/s/django_tomselect/js/django-tomselect.min.js"></script>
+</head>
+<body hx-headers='js:{"X-CSRFToken": "tuOby0DQU7xr1qqThZhrmK0VCFyfqx8wyr9Vn74xZigh5mwM3a5m5scmJ1RuGZ04", "X-Screen": window.innerWidth < 768 ? "M" : "D"}'>
+
+
+<div class="layout-head1 d-flex justify-content-between px-1 pt-1 border-bottom" id="head1">
+    <div>
+        <a data-action-id="core.home.open" href="/"><b>foo</b><img class="brand-mark" src="/s/img/logo-header.png" alt=""></a>
+        ~/<span id="head1-title" class="page-title">all Hiring</span>
+    </div>
+    <div class="d-flex justify-content-end">
+        
+        <div class="form-check form-switch ms-2 mb-0">
+            <label class="form-check-label">
+                <svg class="pb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" /></svg>
+                <input class="form-check-input theme-toggle" data-action-id="core.theme.toggle" type="checkbox" role="switch">
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="layout-head2 layout-scroll-hint d-flex overflow-x-auto border-bottom" id="head2">
+    <div id="head2-context" class="layout-head2-context flex-shrink-0">
+        
+        <span class="loading-dots">...</span>
+        
+    </div>
+    <div id="head2-menu" class="layout-head2-menu d-flex flex-shrink-0 ms-auto">
+        <div class="border-start px-1">
+            <a data-action-id="core.dashboard.open" class="fw-semibold"
+                href="/dashboard/">/</a>
+        </div>
+        <div class="border-start px-1 text-bg-light">
+            <a data-action-id="hiring.area.open" class="fw-semibold text-primary"
+                href="/hiring/">Hiring</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="media.area.open" class="fw-semibold"
+                href="/media/">Media</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="code.area.open" class="fw-semibold"
+                href="/code/">Code</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="meet.area.open" class="fw-semibold"
+                href="/meet/">Meet</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="work.area.open" class="fw-semibold"
+                href="/work/">Work</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="insight.area.open" class="fw-semibold"
+                href="/insight/">Insight</a>
+        </div>
+        <div class="border-start px-1">
+            <a data-action-id="account.settings.open" class="fw-semibold"
+                href="/account/">Account</a>
+        </div>
+    </div>
+</div>
+
+<div class="layout-body layout-has-main2">
+    <aside id="side1" class="layout-side1 d-flex flex-column border-end"
+    style="height: var(--content-height-side1); min-height: 0; overflow-y: auto;">
+    <div class="d-flex flex-column justify-content-start flex-grow-1 flex-shrink-1">
+        <div id="side1-context"></div>
+        <div id="side1-summary"><span class="loading-dots">...</span></div>
+        <div id="side1-insights"><span class="loading-dots">...</span></div>
+        <div class="footer-meta text-body-secondary small border-top mt-auto px-1">
+            <a data-action-id="core.content.changelog.open" href=""
+                hx-get="/changelog/"
+                hx-target="#content-modal"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">Changelog</a> &middot;
+            
+            <a data-action-id="account.billing.open" href="https://billing.stripe.com/p/login/7sYdR95my8yLelP3DQeEo00" rel="nofollow" target="_blank">Billing</a> &middot;
+            
+            <a data-action-id="core.content.about.open" href=""
+                hx-get="/about/"
+                hx-target="#content-modal"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">About</a> &middot;
+            <a data-action-id="core.content.post_job.open" href=""
+                hx-get="/post-job/"
+                hx-target="#content-modal"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">Post a job</a> &middot;
+            <a data-action-id="core.content.terms.open" href=""
+                hx-get="/terms/"
+                hx-target="#content-modal"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">Terms</a> &middot;
+            <a data-action-id="core.content.privacy.open" href=""
+                hx-get="/privacy/"
+                hx-target="#content-modal"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">Privacy</a> &middot;
+            <a data-action-id="feedback.report.open" href=""
+                hx-get="/feedback/report/core/form/"
+                hx-target="#content-modal .modal-content"
+                hx-trigger="click"
+                data-bs-toggle="modal"
+                data-bs-target="#content-modal">Report</a> &middot;
+            <a data-action-id="api.docs.open" href="/api/list/">API</a> &middot;
+            <a href="https://foorilla.hyperping.app/" target="_blank">Status</a>
+        </div>
+        <div class="footer-meta text-body-secondary small border-top px-1">
+            <a href="https://mastodon.social/@foorilla" rel="me" target="_blank" title="Follow us on Mastodon">M</a> &middot;
+            <a href="https://x.com/foorilla" rel="nofollow" target="_blank" title="Follow us on X">X</a> &middot;
+            <a href="https://www.linkedin.com/company/foorillacom/" rel="nofollow" target="_blank" title="Follow us on LinkedIn">LI</a> &middot;
+            <a href="https://github.com/foorilla" rel="nofollow" target="_blank" title="Follow us on GitHub">GH</a> &middot;
+            <a href="https://www.reddit.com/user/foorilla/" rel="nofollow" target="_blank" title="Follow us on Reddit">RDDT</a>
+        </div>
+        <div class="footer-meta text-body-secondary small border-top px-1">
+            v1.9.8 &middot; Made with ☕ + ♥️<br>
+            &copy; 2026 <a href="/">foorilla</a>
+        </div>
+    </div>
+</aside>
+
+    
+<main class="layout-main overflow-y-scroll overflow-x-none border-end text-break"
+    style="height: var(--content-height-main);"
+    id="main1"
+    hx-get="/hiring/jobs/"
+    hx-trigger="load">
+    <span class="loading-dots">...</span>
+</main>
+
+<section class="layout-main layout-main-secondary overflow-y-scroll overflow-x-none d-none d-md-block text-break"
+    style="height: var(--content-height-main);"
+    id="main2"
+    hx-get="/hiring/jobs/top/"
+    hx-trigger="load">
+    <span class="loading-dots">...</span>
+</section>
+
+
+
+</div>
+<script>
+(() => {
+    const themeSwitch = document.querySelector(".theme-toggle");
+    if (!themeSwitch) return;
+    if (currentTheme && currentTheme === 'dark') {
+        themeSwitch.checked = true;
+    }
+    themeSwitch.addEventListener('change', function(event) {
+        if (event.target.checked) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-bs-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+        document.body.dispatchEvent(new CustomEvent('foorilla:themechange'));
+    });
+})();
+</script>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filter-drawer"
+    style="width: 320px;">
+    <span class="loading-dots">...</span>
+</div>
+<div class="offcanvas-md offcanvas-end" tabindex="-1" id="detail-drawer"
+    style="width: 460px;">
+    <span class="loading-dots">...</span>
+</div>
+<div class="modal modal-blur" tabindex="-1" id="content-modal"
+    style="display: none;"
+    
+     _="on closeModal from body call bootstrap.Modal.getInstance(#content-modal).hide()">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content"><span class="loading-dots">...</span></div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed bottom-0 start-0 p-2 mb-2"
+     style="z-index: 1111">
+</div>
+<script src="/s/js/bootstrap.bundle.min.js?v=1.9.8"></script>
+<script src="/s/js/app.js?v=1.9.8"></script>
+
+
+</body>
+</html>
