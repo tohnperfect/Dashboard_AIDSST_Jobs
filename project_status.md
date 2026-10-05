@@ -4,15 +4,16 @@
 
 ### Task List
 - [x] Initialize project (Create README and Project Status docs based on requirements)
-- [ ] Create single-file Python Dash application (`app.py`)
-- [ ] Generate mock datasets using pandas
-  - [ ] Supply side data (Graduates, Curriculum, Employment, Tuition)
-  - [ ] Demand side data (Jobs, Skills, Companies, Salaries)
-- [ ] Build layout structure with Dash and dash-bootstrap-components (Tabs)
-- [ ] Implement Tab 1 (Supply Side) components and charts
-- [ ] Implement Tab 2 (Demand Side) components and charts
-- [ ] Implement Tab 3 (Gap Analysis) components and charts
-- [ ] Add Dash callbacks for cross-filtering interactivity
+- [x] Create single-file Python Dash application (`app.py`)
+- [x] Generate mock datasets using pandas
+  - [x] Supply side data (Graduates, Curriculum, Employment, Tuition)
+  - [x] Demand side data (Jobs, Skills, Companies, Salaries)
+- [x] Build layout structure with Dash and dash-bootstrap-components (Tabs)
+- [x] Implement Tab 1 (Supply Side) components and charts
+- [x] Implement Tab 2 (Demand Side) components and charts
+- [x] Implement Tab 3 (Gap Analysis) components and charts
+- [x] Add Dash callbacks for cross-filtering interactivity
 
 ## Next Steps
-- Write the initial structure of `app.py` with mock data generation.
+- Review the application by running `python app.py`
+- Refine visualizations and styling as needed
