@@ -10,7 +10,6 @@ import plotly.graph_objects as go
 # ------------------------------------------------------------------------------
 
 # --- Supply Side Data (Based on NCES IPEDS Data Center) ---
-# Realistic trends for degrees in Statistics, Data Science, and AI/Machine Learning
 df_supply = pd.DataFrame([
     {'Year': 2019, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 8200, 'Tuition_USD': 22000},
     {'Year': 2020, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 8800, 'Tuition_USD': 22500},
@@ -33,7 +32,6 @@ df_supply = pd.DataFrame([
 programs = df_supply['Program'].unique().tolist()
 job_titles = ['Data Scientist', 'AI Engineer', 'Data Analyst', 'Statistician']
 
-# 1.2 Core Curriculum (General mapping of skills taught in programs)
 df_curriculum = pd.DataFrame([
     {'Program': 'B.S. / M.S. Statistics', 'Skill': 'R', 'Credit_Hours': 12},
     {'Program': 'B.S. / M.S. Statistics', 'Skill': 'Mathematics', 'Credit_Hours': 18},
@@ -51,7 +49,6 @@ df_curriculum = pd.DataFrame([
     {'Program': 'M.S. AI / Machine Learning', 'Skill': 'Cloud Platforms', 'Credit_Hours': 6},
 ])
 
-# 1.3 Employment Tracking (Post-graduation employment rates)
 df_employment = pd.DataFrame([
     {'Program': 'B.S. / M.S. Statistics', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 75},
     {'Program': 'B.S. / M.S. Statistics', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 85},
@@ -67,7 +64,6 @@ df_employment = pd.DataFrame([
 ])
 
 # --- Demand Side Data ---
-# 2.1 & 2.4 Open Positions & Salaries (Based on BLS projections & ai-jobs.net)
 df_demand = pd.DataFrame([
     {'Year': 2019, 'Job_Title': 'Data Scientist', 'Open_Positions': 105000},
     {'Year': 2020, 'Job_Title': 'Data Scientist', 'Open_Positions': 118000},
@@ -112,7 +108,6 @@ df_salary = pd.DataFrame([
     {'Job_Title': 'Statistician', 'Experience_Level': 'Expert-Level', 'Avg_Salary_USD': 125000},
 ])
 
-# 2.2 Required Skills (Based on O*NET and Kaggle Survey) - Demand Score roughly equals % of job postings requesting it
 df_demand_skills = pd.DataFrame([
     {'Job_Title': 'Data Scientist', 'Skill': 'Python', 'Demand_Score': 85},
     {'Job_Title': 'Data Scientist', 'Skill': 'SQL', 'Demand_Score': 65},
@@ -134,7 +129,6 @@ df_demand_skills = pd.DataFrame([
     {'Job_Title': 'Statistician', 'Skill': 'Python', 'Demand_Score': 40},
 ])
 
-# 2.3 Hiring Companies (Top tech companies historically hiring in volume)
 df_companies = pd.DataFrame([
     {'Company': 'Amazon', 'Industry': 'Tech/Retail', 'Open_Roles': 1500},
     {'Company': 'Meta', 'Industry': 'Tech', 'Open_Roles': 800},
@@ -146,131 +140,273 @@ df_companies = pd.DataFrame([
 
 
 # ------------------------------------------------------------------------------
-# 2. App Initialization
+# 2. Styling & Theme Constants
+# ------------------------------------------------------------------------------
+THEME_PALETTE = ['#D8B4FE', '#FDE047', '#67E8F9', '#4ADE80', '#FF8A65']
+
+app_style = {
+    'backgroundColor': '#0A0A0C',
+    'color': '#FFFFFF',
+    'fontFamily': 'Inter, Roboto, sans-serif',
+    'minHeight': '100vh',
+    'padding': '30px'
+}
+
+card_style = {
+    'backgroundColor': '#18181C',
+    'borderRadius': '20px',
+    'border': '1px solid #2E2E36',
+    'boxShadow': '0 8px 32px rgba(0, 0, 0, 0.4)',
+    'padding': '24px',
+    'marginBottom': '24px'
+}
+
+tabs_styles = {
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+    'border': 'none',
+    'marginBottom': '20px'
+}
+
+tab_style = {
+    'padding': '10px 24px',
+    'fontWeight': '600',
+    'backgroundColor': 'transparent',
+    'color': '#8A8A93',
+    'borderRadius': '9999px',
+    'border': 'none',
+    'marginRight': '12px',
+    'cursor': 'pointer',
+    'transition': 'all 0.3s'
+}
+
+tab_selected_style = {
+    'padding': '10px 24px',
+    'fontWeight': '600',
+    'backgroundColor': '#FFFFFF',
+    'color': '#000000',
+    'borderRadius': '9999px',
+    'border': 'none',
+    'marginRight': '12px',
+    'cursor': 'pointer',
+    'boxShadow': '0 4px 12px rgba(255,255,255,0.1)'
+}
+
+table_style_header = {
+    'backgroundColor': '#222228',
+    'color': '#FFFFFF',
+    'border': 'none',
+    'fontWeight': 'bold'
+}
+table_style_data = {
+    'backgroundColor': '#18181C',
+    'color': '#8A8A93',
+    'border': 'none'
+}
+table_style_cell = {
+    'padding': '12px',
+    'textAlign': 'left',
+    'borderBottom': '1px solid #2E2E36'
+}
+
+dropdown_style = {
+    'backgroundColor': '#222228',
+    'color': '#000000' # Plotly dropdowns are notoriously hard to style without pure CSS, so keeping text dark for visibility.
+}
+
+def apply_theme(fig):
+    """Applies the dark, neon-glow theme to a Plotly figure."""
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#8A8A93', family='Inter, sans-serif'),
+        margin=dict(l=20, r=20, t=50, b=20),
+        xaxis=dict(
+            showgrid=True, gridcolor='#2A2A32', griddash='dot', 
+            zeroline=False, showline=False,
+            title_font=dict(color='#FFFFFF')
+        ),
+        yaxis=dict(
+            showgrid=True, gridcolor='#2A2A32', griddash='dot', 
+            zeroline=False, showline=False,
+            title_font=dict(color='#FFFFFF')
+        ),
+        title=dict(font=dict(color='#FFFFFF')),
+        legend=dict(font=dict(color='#8A8A93'))
+    )
+    
+    # Check trace types to apply specific styles
+    for trace in fig.data:
+        if isinstance(trace, go.Scatter):
+            trace.line.shape = 'spline'
+            trace.line.smoothing = 1.0
+            trace.line.width = 3
+            if not trace.fill:
+                trace.fill = 'tozeroy'
+        elif isinstance(trace, go.Bar):
+            # Using marker_line_width=0 for cleaner look
+            trace.marker.line.width = 0
+        elif isinstance(trace, go.Scatterpolar):
+            trace.line.shape = 'spline'
+            trace.line.width = 2
+            
+    return fig
+
+
+# ------------------------------------------------------------------------------
+# 3. App Initialization
 # ------------------------------------------------------------------------------
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 # ------------------------------------------------------------------------------
-# 3. Layout
+# 4. Layout
 # ------------------------------------------------------------------------------
-app.layout = dbc.Container([
-    dbc.Row([
-        dbc.Col(html.H1("AI & Data Science Job Market Dashboard", className="text-center my-4 text-primary"), width=12)
-    ]),
-    
-    dcc.Tabs(id="tabs", value='tab-1', children=[
-        dcc.Tab(label='Supply Side (Graduates)', value='tab-1'),
-        dcc.Tab(label='Demand Side (Job Market)', value='tab-2'),
-        dcc.Tab(label='Gap Analysis (Skill Mismatch)', value='tab-3'),
-    ]),
-    
-    html.Div(id='tabs-content', className="mt-4 p-4 border rounded bg-light")
-], fluid=True)
+app.layout = html.Div([
+    dbc.Container([
+        dbc.Row([
+            dbc.Col(html.H2("AI & Data Science Job Market", style={'fontWeight': 'bold', 'color': '#FFFFFF'}), width=12, className="text-center mb-5 mt-3")
+        ]),
+        
+        dcc.Tabs(id="tabs", value='tab-1', style=tabs_styles, children=[
+            dcc.Tab(label='Supply Side (Graduates)', value='tab-1', style=tab_style, selected_style=tab_selected_style),
+            dcc.Tab(label='Demand Side (Job Market)', value='tab-2', style=tab_style, selected_style=tab_selected_style),
+            dcc.Tab(label='Gap Analysis (Mismatch)', value='tab-3', style=tab_style, selected_style=tab_selected_style),
+        ]),
+        
+        html.Div(id='tabs-content', className="mt-5")
+    ], fluid=True)
+], style=app_style)
 
 # ------------------------------------------------------------------------------
-# 4. Callbacks
+# 5. Callbacks
 # ------------------------------------------------------------------------------
 @app.callback(Output('tabs-content', 'children'),
               Input('tabs', 'value'))
 def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
+            html.Div([
+                html.Label("Filter by Program:", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                dcc.Dropdown(
+                    id='supply-program-filter',
+                    options=[{'label': i, 'value': i} for i in programs],
+                    value=programs,
+                    multi=True,
+                    style=dropdown_style
+                )
+            ], style=card_style),
+            
             dbc.Row([
                 dbc.Col([
-                    html.Label("Filter by Program:"),
-                    dcc.Dropdown(
-                        id='supply-program-filter',
-                        options=[{'label': i, 'value': i} for i in programs],
-                        value=programs,
-                        multi=True
-                    )
-                ], width=12, className="mb-4")
-            ]),
-            dbc.Row([
-                dbc.Col([
-                    dcc.Graph(id='fig-graduates'),
-                    html.P("Source: NCES IPEDS Data Center (Completion data for CIP codes 27.05, 30.70)", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-graduates'),
+                        html.P("Source: NCES IPEDS Data Center (Completion data for CIP codes 27.05, 30.70)", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6),
                 dbc.Col([
-                    dcc.Graph(id='fig-tuition'),
-                    html.P("Source: Integrated Postsecondary Education Data System (IPEDS) average tuition metrics.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-tuition'),
+                        html.P("Source: Integrated Postsecondary Education Data System (IPEDS) average tuition metrics.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6)
             ]),
             dbc.Row([
                 dbc.Col([
-                    dcc.Graph(id='fig-employment'),
-                    html.P("Source: Kaggle Machine Learning & Data Science Survey (2022) / Alumni surveys.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-employment'),
+                        html.P("Source: Kaggle Machine Learning & Data Science Survey (2022) / Alumni surveys.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6),
                 dbc.Col([
-                    html.H5("Core Curriculum (Skills Taught)", className="mt-4 text-center"),
-                    dash_table.DataTable(
-                        id='curriculum-table',
-                        columns=[{"name": i, "id": i} for i in df_curriculum.columns],
-                        page_size=10,
-                        style_table={'overflowX': 'auto'},
-                        style_cell={'textAlign': 'left'}
-                    ),
-                    html.P("Source: Aggregated university curriculum analysis (e.g. required credit hours by topic).", className="text-muted small mt-2")
+                    html.Div([
+                        html.H5("Core Curriculum (Skills Taught)", style={'color': '#FFFFFF', 'marginBottom': '20px'}),
+                        dash_table.DataTable(
+                            id='curriculum-table',
+                            columns=[{"name": i, "id": i} for i in df_curriculum.columns],
+                            page_size=10,
+                            style_table={'overflowX': 'auto'},
+                            style_header=table_style_header,
+                            style_data=table_style_data,
+                            style_cell=table_style_cell
+                        ),
+                        html.P("Source: Aggregated university curriculum analysis.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6)
             ])
         ])
         
     elif tab == 'tab-2':
         return html.Div([
+            html.Div([
+                html.Label("Filter by Job Title:", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                dcc.Dropdown(
+                    id='demand-job-filter',
+                    options=[{'label': i, 'value': i} for i in job_titles],
+                    value=job_titles,
+                    multi=True,
+                    style=dropdown_style
+                )
+            ], style=card_style),
+            
             dbc.Row([
                 dbc.Col([
-                    html.Label("Filter by Job Title:"),
-                    dcc.Dropdown(
-                        id='demand-job-filter',
-                        options=[{'label': i, 'value': i} for i in job_titles],
-                        value=job_titles,
-                        multi=True
-                    )
-                ], width=12, className="mb-4")
-            ]),
-            dbc.Row([
-                dbc.Col([
-                    dcc.Graph(id='fig-open-pos'),
-                    html.P("Source: U.S. Bureau of Labor Statistics (BLS) Occupational Employment and Wage Statistics (OEWS).", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-open-pos'),
+                        html.P("Source: U.S. Bureau of Labor Statistics (BLS) Occupational Employment and Wage Statistics (OEWS).", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6),
                 dbc.Col([
-                    dcc.Graph(id='fig-salary'),
-                    html.P("Source: Data Science Job Salaries (ai-jobs.net) & Kaggle Survey 2022.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-salary'),
+                        html.P("Source: Data Science Job Salaries (ai-jobs.net) & Kaggle Survey 2022.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6)
             ]),
             dbc.Row([
                 dbc.Col([
-                    dcc.Graph(id='fig-req-skills'),
-                    html.P("Source: O*NET OnLine Database & Data Scientist Job Postings Dataset.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-req-skills'),
+                        html.P("Source: O*NET OnLine Database & Data Scientist Job Postings Dataset.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6),
                 dbc.Col([
-                    html.H5("Top Hiring Companies", className="mt-4 text-center"),
-                    dash_table.DataTable(
-                        id='companies-table',
-                        columns=[{"name": i, "id": i} for i in df_companies.columns],
-                        data=df_companies.to_dict('records'),
-                        page_size=10,
-                        style_table={'overflowX': 'auto'},
-                        style_cell={'textAlign': 'left'}
-                    ),
-                    html.P("Source: Data Scientist Job Postings Dataset (Kaggle) active listing counts.", className="text-muted small mt-2")
+                    html.Div([
+                        html.H5("Top Hiring Companies", style={'color': '#FFFFFF', 'marginBottom': '20px'}),
+                        dash_table.DataTable(
+                            id='companies-table',
+                            columns=[{"name": i, "id": i} for i in df_companies.columns],
+                            data=df_companies.to_dict('records'),
+                            page_size=10,
+                            style_table={'overflowX': 'auto'},
+                            style_header=table_style_header,
+                            style_data=table_style_data,
+                            style_cell=table_style_cell
+                        ),
+                        html.P("Source: Data Scientist Job Postings Dataset (Kaggle).", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6)
             ])
         ])
         
     elif tab == 'tab-3':
         return html.Div([
-            dbc.Row([
-                dbc.Col(html.P("This tab compares the skills taught in degree programs vs. the skills demanded by employers. A negative gap indicates a shortage (high demand, low supply), while a positive gap indicates an oversupply.", className="lead"), width=12)
-            ]),
+            html.Div([
+                html.P("This tab compares the skills taught in degree programs vs. the skills demanded by employers. A negative gap indicates a shortage (high demand, low supply), while a positive gap indicates an oversupply.", style={'color': '#8A8A93', 'margin': '0'})
+            ], style=card_style),
+            
             dbc.Row([
                 dbc.Col([
-                    dcc.Graph(id='fig-mismatch'),
-                    html.P("Source: Normalized derivation combining NCES supply metrics vs. O*NET / BLS demand metrics.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-mismatch'),
+                        html.P("Source: Normalized derivation combining NCES supply metrics vs. O*NET / BLS demand metrics.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6),
                 dbc.Col([
-                    dcc.Graph(id='fig-radar'),
-                    html.P("Source: Derived skill alignment based on curriculum hours vs. job posting frequencies.", className="text-muted small mt-2")
+                    html.Div([
+                        dcc.Graph(id='fig-radar'),
+                        html.P("Source: Derived skill alignment based on curriculum hours vs. job posting frequencies.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
                 ], width=6)
             ])
         ])
@@ -293,12 +429,15 @@ def update_tab1(selected_programs):
     filtered_emp = df_employment[df_employment['Program'].isin(selected_programs)]
     filtered_curr = df_curriculum[df_curriculum['Program'].isin(selected_programs)]
     
-    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Program', markers=True, title='Graduates Trend by Program (USA)')
+    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Program', markers=True, title='Graduates Trend by Program (USA)', color_discrete_sequence=THEME_PALETTE)
+    fig_grad = apply_theme(fig_grad)
     
     df_tuit = filtered_supply[filtered_supply['Year'] == 2023]
-    fig_tuit = px.bar(df_tuit, x='Program', y='Tuition_USD', color='Program', title='Average Tuition Fees (2023)')
+    fig_tuit = px.bar(df_tuit, x='Program', y='Tuition_USD', color='Program', title='Average Tuition Fees (2023)', color_discrete_sequence=THEME_PALETTE)
+    fig_tuit = apply_theme(fig_tuit)
     
-    fig_emp = px.bar(filtered_emp, x='Program', y='Employed_Pct', color='Year_Post_Grad', barmode='group', title='Employment Rate Post-Graduation (%)')
+    fig_emp = px.bar(filtered_emp, x='Program', y='Employed_Pct', color='Year_Post_Grad', barmode='group', title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
+    fig_emp = apply_theme(fig_emp)
     
     return fig_grad, fig_tuit, fig_emp, filtered_curr.to_dict('records')
 
@@ -319,12 +458,15 @@ def update_tab2(selected_jobs):
     filtered_skills = df_demand_skills[df_demand_skills['Job_Title'].isin(selected_jobs)]
     filtered_salary = df_salary[df_salary['Job_Title'].isin(selected_jobs)]
     
-    fig_open = px.line(filtered_demand, x='Year', y='Open_Positions', color='Job_Title', markers=True, title='Open Positions Over Time')
+    fig_open = px.line(filtered_demand, x='Year', y='Open_Positions', color='Job_Title', markers=True, title='Open Positions Over Time', color_discrete_sequence=THEME_PALETTE)
+    fig_open = apply_theme(fig_open)
     
-    fig_sal = px.bar(filtered_salary, x='Job_Title', y='Avg_Salary_USD', color='Experience_Level', barmode='group', title='Average Salary by Experience')
+    fig_sal = px.bar(filtered_salary, x='Job_Title', y='Avg_Salary_USD', color='Experience_Level', barmode='group', title='Average Salary by Experience', color_discrete_sequence=THEME_PALETTE)
+    fig_sal = apply_theme(fig_sal)
     
     skill_agg = filtered_skills.groupby('Skill')['Demand_Score'].mean().reset_index().sort_values('Demand_Score', ascending=True)
-    fig_req = px.bar(skill_agg, x='Demand_Score', y='Skill', orientation='h', title='Top Required Skills (%)')
+    fig_req = px.bar(skill_agg, x='Demand_Score', y='Skill', orientation='h', title='Top Required Skills (%)', color_discrete_sequence=['#D8B4FE'])
+    fig_req = apply_theme(fig_req)
     
     return fig_open, fig_sal, fig_req
 
@@ -347,23 +489,37 @@ def update_tab3(tab):
     mismatch_df['Gap'] = mismatch_df['Supply_Score'] - mismatch_df['Demand_Score_Norm']
     
     fig_mismatch = px.bar(mismatch_df.sort_values('Gap'), x='Gap', y='Skill', orientation='h', 
-                          color='Gap', color_continuous_scale='RdYlGn',
+                          color='Gap', color_continuous_scale=['#D8B4FE', '#18181C', '#67E8F9'],
                           title='Skill Mismatch (Supply Score - Demand Score)')
+    fig_mismatch = apply_theme(fig_mismatch)
                           
     fig_radar = go.Figure()
     fig_radar.add_trace(go.Scatterpolar(
         r=mismatch_df['Supply_Score'],
         theta=mismatch_df['Skill'],
         fill='toself',
-        name='Supply (Taught)'
+        name='Supply (Taught)',
+        line_color='#D8B4FE'
     ))
     fig_radar.add_trace(go.Scatterpolar(
         r=mismatch_df['Demand_Score_Norm'],
         theta=mismatch_df['Skill'],
         fill='toself',
-        name='Demand (Required)'
+        name='Demand (Required)',
+        line_color='#67E8F9'
     ))
-    fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=True, title='Skill Gap Radar')
+    
+    fig_radar = apply_theme(fig_radar)
+    # Re-override polar specific background
+    fig_radar.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 100], gridcolor='#2A2A32'),
+            angularaxis=dict(gridcolor='#2A2A32'),
+            bgcolor='rgba(0,0,0,0)'
+        ), 
+        showlegend=True, 
+        title='Skill Gap Radar'
+    )
     
     return fig_mismatch, fig_radar
 
