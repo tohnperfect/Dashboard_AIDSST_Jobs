@@ -11,56 +11,61 @@ import plotly.graph_objects as go
 
 # --- Supply Side Data (Based on NCES IPEDS Data Center) ---
 df_supply = pd.DataFrame([
-    {'Year': 2019, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 8200, 'Tuition_USD': 22000},
-    {'Year': 2020, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 8800, 'Tuition_USD': 22500},
-    {'Year': 2021, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 9500, 'Tuition_USD': 23000},
-    {'Year': 2022, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 10500, 'Tuition_USD': 24000},
-    {'Year': 2023, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 11200, 'Tuition_USD': 25000},
-    
-    {'Year': 2019, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 1500, 'Tuition_USD': 28000},
-    {'Year': 2020, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 2500, 'Tuition_USD': 29000},
-    {'Year': 2021, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 4000, 'Tuition_USD': 30000},
-    {'Year': 2022, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 6000, 'Tuition_USD': 32000},
-    {'Year': 2023, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 8500, 'Tuition_USD': 33500},
-    
-    {'Year': 2019, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 800, 'Tuition_USD': 35000},
-    {'Year': 2020, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 1200, 'Tuition_USD': 36000},
-    {'Year': 2021, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 1800, 'Tuition_USD': 38000},
-    {'Year': 2022, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 2700, 'Tuition_USD': 40000},
-    {'Year': 2023, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 4000, 'Tuition_USD': 42000},
+    # Stanford
+    {'Year': 2021, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 180, 'Tuition_USD': 55000},
+    {'Year': 2022, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 220, 'Tuition_USD': 57000},
+    {'Year': 2023, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 250, 'Tuition_USD': 60000},
+    # MIT
+    {'Year': 2021, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 200, 'Tuition_USD': 53000},
+    {'Year': 2022, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 240, 'Tuition_USD': 55000},
+    {'Year': 2023, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 280, 'Tuition_USD': 58000},
+    # Imperial College London
+    {'Year': 2021, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 150, 'Tuition_USD': 45000},
+    {'Year': 2022, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 170, 'Tuition_USD': 47000},
+    {'Year': 2023, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 190, 'Tuition_USD': 49000},
+    # NUS
+    {'Year': 2021, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 120, 'Tuition_USD': 30000},
+    {'Year': 2022, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 160, 'Tuition_USD': 32000},
+    {'Year': 2023, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 200, 'Tuition_USD': 35000},
+    # UofT
+    {'Year': 2021, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 300, 'Tuition_USD': 40000},
+    {'Year': 2022, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 350, 'Tuition_USD': 42000},
+    {'Year': 2023, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 420, 'Tuition_USD': 45000},
 ])
-programs = df_supply['Program'].unique().tolist()
+institutions = df_supply['Institution'].unique().tolist()
 job_titles = ['Data Scientist', 'AI Engineer', 'Data Analyst', 'Statistician']
 
 df_curriculum = pd.DataFrame([
-    {'Program': 'B.S. / M.S. Statistics', 'Skill': 'R', 'Credit_Hours': 12},
-    {'Program': 'B.S. / M.S. Statistics', 'Skill': 'Mathematics', 'Credit_Hours': 18},
-    {'Program': 'B.S. / M.S. Statistics', 'Skill': 'Python', 'Credit_Hours': 6},
-    {'Program': 'B.S. / M.S. Statistics', 'Skill': 'SQL', 'Credit_Hours': 3},
-    
-    {'Program': 'B.S. / M.S. Data Science', 'Skill': 'Python', 'Credit_Hours': 15},
-    {'Program': 'B.S. / M.S. Data Science', 'Skill': 'SQL', 'Credit_Hours': 9},
-    {'Program': 'B.S. / M.S. Data Science', 'Skill': 'Machine Learning', 'Credit_Hours': 12},
-    {'Program': 'B.S. / M.S. Data Science', 'Skill': 'Data Visualization', 'Credit_Hours': 6},
-    
-    {'Program': 'M.S. AI / Machine Learning', 'Skill': 'Python', 'Credit_Hours': 15},
-    {'Program': 'M.S. AI / Machine Learning', 'Skill': 'Deep Learning', 'Credit_Hours': 12},
-    {'Program': 'M.S. AI / Machine Learning', 'Skill': 'Machine Learning', 'Credit_Hours': 15},
-    {'Program': 'M.S. AI / Machine Learning', 'Skill': 'Cloud Platforms', 'Credit_Hours': 6},
+    {'Institution': 'Stanford University', 'Skill': 'Deep Learning', 'Credit_Hours': 15},
+    {'Institution': 'Stanford University', 'Skill': 'Python', 'Credit_Hours': 12},
+    {'Institution': 'Stanford University', 'Skill': 'Machine Learning', 'Credit_Hours': 9},
+    {'Institution': 'MIT', 'Skill': 'Machine Learning', 'Credit_Hours': 15},
+    {'Institution': 'MIT', 'Skill': 'Python', 'Credit_Hours': 12},
+    {'Institution': 'MIT', 'Skill': 'SQL', 'Credit_Hours': 6},
+    {'Institution': 'MIT', 'Skill': 'Data Visualization', 'Credit_Hours': 6},
+    {'Institution': 'Imperial College London', 'Skill': 'Mathematics', 'Credit_Hours': 18},
+    {'Institution': 'Imperial College London', 'Skill': 'R', 'Credit_Hours': 15},
+    {'Institution': 'Imperial College London', 'Skill': 'SQL', 'Credit_Hours': 6},
+    {'Institution': 'National Univ. of Singapore', 'Skill': 'Python', 'Credit_Hours': 12},
+    {'Institution': 'National Univ. of Singapore', 'Skill': 'Deep Learning', 'Credit_Hours': 9},
+    {'Institution': 'National Univ. of Singapore', 'Skill': 'Cloud Platforms', 'Credit_Hours': 9},
+    {'Institution': 'University of Toronto', 'Skill': 'Python', 'Credit_Hours': 12},
+    {'Institution': 'University of Toronto', 'Skill': 'SQL', 'Credit_Hours': 9},
+    {'Institution': 'University of Toronto', 'Skill': 'Machine Learning', 'Credit_Hours': 9},
+    {'Institution': 'University of Toronto', 'Skill': 'R', 'Credit_Hours': 6},
 ])
 
 df_employment = pd.DataFrame([
-    {'Program': 'B.S. / M.S. Statistics', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 75},
-    {'Program': 'B.S. / M.S. Statistics', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 85},
-    {'Program': 'B.S. / M.S. Statistics', 'Year_Post_Grad': 'Year 3', 'Employed_Pct': 92},
-    
-    {'Program': 'B.S. / M.S. Data Science', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 82},
-    {'Program': 'B.S. / M.S. Data Science', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 90},
-    {'Program': 'B.S. / M.S. Data Science', 'Year_Post_Grad': 'Year 3', 'Employed_Pct': 95},
-    
-    {'Program': 'M.S. AI / Machine Learning', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 88},
-    {'Program': 'M.S. AI / Machine Learning', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 94},
-    {'Program': 'M.S. AI / Machine Learning', 'Year_Post_Grad': 'Year 3', 'Employed_Pct': 98},
+    {'Institution': 'Stanford University', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 95},
+    {'Institution': 'Stanford University', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 98},
+    {'Institution': 'MIT', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 92},
+    {'Institution': 'MIT', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 96},
+    {'Institution': 'Imperial College London', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 85},
+    {'Institution': 'Imperial College London', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 92},
+    {'Institution': 'National Univ. of Singapore', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 88},
+    {'Institution': 'National Univ. of Singapore', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 94},
+    {'Institution': 'University of Toronto', 'Year_Post_Grad': 'Year 1', 'Employed_Pct': 87},
+    {'Institution': 'University of Toronto', 'Year_Post_Grad': 'Year 2', 'Employed_Pct': 93},
 ])
 
 # --- Demand Side Data ---
@@ -70,19 +75,16 @@ df_demand = pd.DataFrame([
     {'Year': 2021, 'Job_Title': 'Data Scientist', 'Open_Positions': 140000},
     {'Year': 2022, 'Job_Title': 'Data Scientist', 'Open_Positions': 168900},
     {'Year': 2023, 'Job_Title': 'Data Scientist', 'Open_Positions': 185000},
-    
     {'Year': 2019, 'Job_Title': 'Data Analyst', 'Open_Positions': 120000},
     {'Year': 2020, 'Job_Title': 'Data Analyst', 'Open_Positions': 130000},
     {'Year': 2021, 'Job_Title': 'Data Analyst', 'Open_Positions': 145000},
     {'Year': 2022, 'Job_Title': 'Data Analyst', 'Open_Positions': 155000},
     {'Year': 2023, 'Job_Title': 'Data Analyst', 'Open_Positions': 165000},
-    
     {'Year': 2019, 'Job_Title': 'AI Engineer', 'Open_Positions': 30000},
     {'Year': 2020, 'Job_Title': 'AI Engineer', 'Open_Positions': 42000},
     {'Year': 2021, 'Job_Title': 'AI Engineer', 'Open_Positions': 65000},
     {'Year': 2022, 'Job_Title': 'AI Engineer', 'Open_Positions': 90000},
     {'Year': 2023, 'Job_Title': 'AI Engineer', 'Open_Positions': 120000},
-    
     {'Year': 2019, 'Job_Title': 'Statistician', 'Open_Positions': 40000},
     {'Year': 2020, 'Job_Title': 'Statistician', 'Open_Positions': 42500},
     {'Year': 2021, 'Job_Title': 'Statistician', 'Open_Positions': 45000},
@@ -94,15 +96,12 @@ df_salary = pd.DataFrame([
     {'Job_Title': 'Data Scientist', 'Experience_Level': 'Entry-Level', 'Avg_Salary_USD': 95000},
     {'Job_Title': 'Data Scientist', 'Experience_Level': 'Mid-Level', 'Avg_Salary_USD': 130000},
     {'Job_Title': 'Data Scientist', 'Experience_Level': 'Expert-Level', 'Avg_Salary_USD': 165000},
-    
     {'Job_Title': 'AI Engineer', 'Experience_Level': 'Entry-Level', 'Avg_Salary_USD': 110000},
     {'Job_Title': 'AI Engineer', 'Experience_Level': 'Mid-Level', 'Avg_Salary_USD': 150000},
     {'Job_Title': 'AI Engineer', 'Experience_Level': 'Expert-Level', 'Avg_Salary_USD': 195000},
-    
     {'Job_Title': 'Data Analyst', 'Experience_Level': 'Entry-Level', 'Avg_Salary_USD': 65000},
     {'Job_Title': 'Data Analyst', 'Experience_Level': 'Mid-Level', 'Avg_Salary_USD': 85000},
     {'Job_Title': 'Data Analyst', 'Experience_Level': 'Expert-Level', 'Avg_Salary_USD': 110000},
-    
     {'Job_Title': 'Statistician', 'Experience_Level': 'Entry-Level', 'Avg_Salary_USD': 75000},
     {'Job_Title': 'Statistician', 'Experience_Level': 'Mid-Level', 'Avg_Salary_USD': 98000},
     {'Job_Title': 'Statistician', 'Experience_Level': 'Expert-Level', 'Avg_Salary_USD': 125000},
@@ -114,16 +113,13 @@ df_demand_skills = pd.DataFrame([
     {'Job_Title': 'Data Scientist', 'Skill': 'Machine Learning', 'Demand_Score': 75},
     {'Job_Title': 'Data Scientist', 'Skill': 'R', 'Demand_Score': 35},
     {'Job_Title': 'Data Scientist', 'Skill': 'Cloud Platforms', 'Demand_Score': 50},
-    
     {'Job_Title': 'AI Engineer', 'Skill': 'Python', 'Demand_Score': 95},
     {'Job_Title': 'AI Engineer', 'Skill': 'Deep Learning', 'Demand_Score': 85},
     {'Job_Title': 'AI Engineer', 'Skill': 'Machine Learning', 'Demand_Score': 90},
     {'Job_Title': 'AI Engineer', 'Skill': 'Cloud Platforms', 'Demand_Score': 70},
-    
     {'Job_Title': 'Data Analyst', 'Skill': 'SQL', 'Demand_Score': 85},
     {'Job_Title': 'Data Analyst', 'Skill': 'Data Visualization', 'Demand_Score': 75},
     {'Job_Title': 'Data Analyst', 'Skill': 'Python', 'Demand_Score': 45},
-    
     {'Job_Title': 'Statistician', 'Skill': 'R', 'Demand_Score': 80},
     {'Job_Title': 'Statistician', 'Skill': 'Mathematics', 'Demand_Score': 90},
     {'Job_Title': 'Statistician', 'Skill': 'Python', 'Demand_Score': 40},
@@ -147,7 +143,6 @@ df_companies = pd.DataFrame([
     {'Job_Title': 'Data Analyst', 'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 150},
     {'Job_Title': 'Statistician', 'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 50},
 ])
-
 
 # ------------------------------------------------------------------------------
 # 2. Styling & Theme Constants
@@ -226,7 +221,6 @@ dropdown_style = {
 }
 
 def apply_theme(fig):
-    """Applies the dark, neon-glow theme to a Plotly figure."""
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -244,7 +238,7 @@ def apply_theme(fig):
         ),
         title=dict(font=dict(color='#FFFFFF')),
         legend=dict(font=dict(color='#8A8A93')),
-        clickmode='event+select' # Important for cross-filtering
+        clickmode='event+select'
     )
     
     for trace in fig.data:
@@ -296,11 +290,11 @@ def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
             html.Div([
-                html.Label("Filter by Program (Click on any chart to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                html.Label("Filter by Institution (Click on any chart to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
                 dcc.Dropdown(
-                    id='supply-program-filter',
-                    options=[{'label': i, 'value': i} for i in programs],
-                    value=programs,
+                    id='supply-institution-filter',
+                    options=[{'label': f"{i} ({df_supply[df_supply['Institution'] == i]['Country'].iloc[0]})", 'value': i} for i in institutions],
+                    value=institutions,
                     multi=True,
                     style=dropdown_style
                 )
@@ -423,11 +417,11 @@ def render_content(tab):
 # Cross-Filtering Interactivity Callbacks (Click on Chart -> Update Dropdown)
 # ------------------------------------------------------------------------------
 @app.callback(
-    Output('supply-program-filter', 'value'),
+    Output('supply-institution-filter', 'value'),
     [Input('fig-graduates', 'clickData'),
      Input('fig-tuition', 'clickData'),
      Input('fig-employment', 'clickData')],
-    [State('supply-program-filter', 'value')],
+    [State('supply-institution-filter', 'value')],
     prevent_initial_call=True
 )
 def cross_filter_tab1_clicks(clk_grad, clk_tuit, clk_emp, current_selection):
@@ -443,11 +437,10 @@ def cross_filter_tab1_clicks(clk_grad, clk_tuit, clk_emp, current_selection):
         
     if click_data and 'points' in click_data:
         try:
-            program = click_data['points'][0]['customdata'][0]
-            # Toggle logic: if already the only one selected, reset to all.
-            if len(current_selection) == 1 and current_selection[0] == program:
-                return programs
-            return [program]
+            inst = click_data['points'][0]['customdata'][0]
+            if len(current_selection) == 1 and current_selection[0] == inst:
+                return institutions
+            return [inst]
         except (KeyError, IndexError):
             pass
     raise dash.exceptions.PreventUpdate
@@ -487,25 +480,24 @@ def cross_filter_tab2_clicks(clk_open, clk_sal, current_selection):
      Output('fig-tuition', 'figure'),
      Output('fig-employment', 'figure'),
      Output('curriculum-table', 'data')],
-    [Input('supply-program-filter', 'value')]
+    [Input('supply-institution-filter', 'value')]
 )
-def update_tab1(selected_programs):
-    if not selected_programs:
-        selected_programs = programs
+def update_tab1(selected_inst):
+    if not selected_inst:
+        selected_inst = institutions
         
-    filtered_supply = df_supply[df_supply['Program'].isin(selected_programs)]
-    filtered_emp = df_employment[df_employment['Program'].isin(selected_programs)]
-    filtered_curr = df_curriculum[df_curriculum['Program'].isin(selected_programs)]
+    filtered_supply = df_supply[df_supply['Institution'].isin(selected_inst)]
+    filtered_emp = df_employment[df_employment['Institution'].isin(selected_inst)]
+    filtered_curr = df_curriculum[df_curriculum['Institution'].isin(selected_inst)]
     
-    # Notice custom_data=['Program'] added to all charts so we can extract it in clickData
-    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Program', custom_data=['Program'], markers=True, title='Graduates Trend by Program (USA)', color_discrete_sequence=THEME_PALETTE)
+    fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Institution', custom_data=['Institution'], markers=True, title='Graduates Trend by Institution', color_discrete_sequence=THEME_PALETTE)
     fig_grad = apply_theme(fig_grad)
     
     df_tuit = filtered_supply[filtered_supply['Year'] == 2023]
-    fig_tuit = px.bar(df_tuit, x='Program', y='Tuition_USD', color='Program', custom_data=['Program'], title='Average Tuition Fees (2023)', color_discrete_sequence=THEME_PALETTE)
+    fig_tuit = px.bar(df_tuit, x='Institution', y='Tuition_USD', color='Institution', custom_data=['Institution'], title='Average Tuition Fees (2023)', color_discrete_sequence=THEME_PALETTE)
     fig_tuit = apply_theme(fig_tuit)
     
-    fig_emp = px.bar(filtered_emp, x='Program', y='Employed_Pct', color='Year_Post_Grad', barmode='group', custom_data=['Program'], title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
+    fig_emp = px.bar(filtered_emp, x='Institution', y='Employed_Pct', color='Year_Post_Grad', barmode='group', custom_data=['Institution'], title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
     fig_emp = apply_theme(fig_emp)
     
     return fig_grad, fig_tuit, fig_emp, filtered_curr.to_dict('records')
