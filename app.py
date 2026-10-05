@@ -130,12 +130,22 @@ df_demand_skills = pd.DataFrame([
 ])
 
 df_companies = pd.DataFrame([
-    {'Company': 'Amazon', 'Industry': 'Tech/Retail', 'Open_Roles': 1500},
-    {'Company': 'Meta', 'Industry': 'Tech', 'Open_Roles': 800},
-    {'Company': 'Google', 'Industry': 'Tech', 'Open_Roles': 1200},
-    {'Company': 'Microsoft', 'Industry': 'Tech', 'Open_Roles': 1100},
-    {'Company': 'JPMorgan Chase', 'Industry': 'Finance', 'Open_Roles': 650},
-    {'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 400},
+    {'Job_Title': 'Data Scientist', 'Company': 'Amazon', 'Industry': 'Tech/Retail', 'Open_Roles': 800},
+    {'Job_Title': 'AI Engineer', 'Company': 'Amazon', 'Industry': 'Tech/Retail', 'Open_Roles': 500},
+    {'Job_Title': 'Data Analyst', 'Company': 'Amazon', 'Industry': 'Tech/Retail', 'Open_Roles': 200},
+    {'Job_Title': 'Data Scientist', 'Company': 'Meta', 'Industry': 'Tech', 'Open_Roles': 500},
+    {'Job_Title': 'AI Engineer', 'Company': 'Meta', 'Industry': 'Tech', 'Open_Roles': 300},
+    {'Job_Title': 'Data Scientist', 'Company': 'Google', 'Industry': 'Tech', 'Open_Roles': 600},
+    {'Job_Title': 'AI Engineer', 'Company': 'Google', 'Industry': 'Tech', 'Open_Roles': 400},
+    {'Job_Title': 'Statistician', 'Company': 'Google', 'Industry': 'Tech', 'Open_Roles': 200},
+    {'Job_Title': 'Data Scientist', 'Company': 'Microsoft', 'Industry': 'Tech', 'Open_Roles': 500},
+    {'Job_Title': 'AI Engineer', 'Company': 'Microsoft', 'Industry': 'Tech', 'Open_Roles': 600},
+    {'Job_Title': 'Data Analyst', 'Company': 'JPMorgan Chase', 'Industry': 'Finance', 'Open_Roles': 400},
+    {'Job_Title': 'Data Scientist', 'Company': 'JPMorgan Chase', 'Industry': 'Finance', 'Open_Roles': 200},
+    {'Job_Title': 'Statistician', 'Company': 'JPMorgan Chase', 'Industry': 'Finance', 'Open_Roles': 50},
+    {'Job_Title': 'Data Scientist', 'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 200},
+    {'Job_Title': 'Data Analyst', 'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 150},
+    {'Job_Title': 'Statistician', 'Company': 'UnitedHealth Group', 'Industry': 'Healthcare', 'Open_Roles': 50},
 ])
 
 
@@ -374,8 +384,7 @@ def render_content(tab):
                         html.H5("Top Hiring Companies", style={'color': '#FFFFFF', 'marginBottom': '20px'}),
                         dash_table.DataTable(
                             id='companies-table',
-                            columns=[{"name": i, "id": i} for i in df_companies.columns],
-                            data=df_companies.to_dict('records'),
+                            columns=[{"name": i, "id": i} for i in ['Company', 'Industry', 'Open_Roles']],
                             page_size=10,
                             style_table={'overflowX': 'auto'},
                             style_header=table_style_header,
@@ -505,7 +514,8 @@ def update_tab1(selected_programs):
 @app.callback(
     [Output('fig-open-pos', 'figure'),
      Output('fig-salary', 'figure'),
-     Output('fig-req-skills', 'figure')],
+     Output('fig-req-skills', 'figure'),
+     Output('companies-table', 'data')],
     [Input('demand-job-filter', 'value')]
 )
 def update_tab2(selected_jobs):
@@ -515,6 +525,7 @@ def update_tab2(selected_jobs):
     filtered_demand = df_demand[df_demand['Job_Title'].isin(selected_jobs)]
     filtered_skills = df_demand_skills[df_demand_skills['Job_Title'].isin(selected_jobs)]
     filtered_salary = df_salary[df_salary['Job_Title'].isin(selected_jobs)]
+    filtered_companies = df_companies[df_companies['Job_Title'].isin(selected_jobs)]
     
     fig_open = px.line(filtered_demand, x='Year', y='Open_Positions', color='Job_Title', custom_data=['Job_Title'], markers=True, title='Open Positions Over Time', color_discrete_sequence=THEME_PALETTE)
     fig_open = apply_theme(fig_open)
@@ -526,7 +537,9 @@ def update_tab2(selected_jobs):
     fig_req = px.bar(skill_agg, x='Demand_Score', y='Skill', orientation='h', title='Top Required Skills (%)', color_discrete_sequence=['#D8B4FE'])
     fig_req = apply_theme(fig_req)
     
-    return fig_open, fig_sal, fig_req
+    comp_agg = filtered_companies.groupby(['Company', 'Industry'])['Open_Roles'].sum().reset_index().sort_values('Open_Roles', ascending=False)
+    
+    return fig_open, fig_sal, fig_req, comp_agg.to_dict('records')
 
 
 @app.callback(
