@@ -12,25 +12,25 @@ import plotly.graph_objects as go
 # --- Supply Side Data (Based on NCES IPEDS Data Center) ---
 df_supply = pd.DataFrame([
     # Stanford
-    {'Year': 2021, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 180, 'Tuition_USD': 55000},
-    {'Year': 2022, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 220, 'Tuition_USD': 57000},
-    {'Year': 2023, 'Institution': 'Stanford University', 'Country': 'USA', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 250, 'Tuition_USD': 60000},
+    {'Year': 2021, 'Institution': 'Stanford University', 'Country': 'USA', 'lat': 37.4275, 'lon': -122.1697, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 180, 'Tuition_USD': 55000},
+    {'Year': 2022, 'Institution': 'Stanford University', 'Country': 'USA', 'lat': 37.4275, 'lon': -122.1697, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 220, 'Tuition_USD': 57000},
+    {'Year': 2023, 'Institution': 'Stanford University', 'Country': 'USA', 'lat': 37.4275, 'lon': -122.1697, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 250, 'Tuition_USD': 60000},
     # MIT
-    {'Year': 2021, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 200, 'Tuition_USD': 53000},
-    {'Year': 2022, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 240, 'Tuition_USD': 55000},
-    {'Year': 2023, 'Institution': 'MIT', 'Country': 'USA', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 280, 'Tuition_USD': 58000},
+    {'Year': 2021, 'Institution': 'MIT', 'Country': 'USA', 'lat': 42.3601, 'lon': -71.0942, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 200, 'Tuition_USD': 53000},
+    {'Year': 2022, 'Institution': 'MIT', 'Country': 'USA', 'lat': 42.3601, 'lon': -71.0942, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 240, 'Tuition_USD': 55000},
+    {'Year': 2023, 'Institution': 'MIT', 'Country': 'USA', 'lat': 42.3601, 'lon': -71.0942, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 280, 'Tuition_USD': 58000},
     # Imperial College London
-    {'Year': 2021, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 150, 'Tuition_USD': 45000},
-    {'Year': 2022, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 170, 'Tuition_USD': 47000},
-    {'Year': 2023, 'Institution': 'Imperial College London', 'Country': 'UK', 'Program': 'B.S. / M.S. Statistics', 'Graduates': 190, 'Tuition_USD': 49000},
+    {'Year': 2021, 'Institution': 'Imperial College London', 'Country': 'UK', 'lat': 51.4988, 'lon': -0.1749, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 150, 'Tuition_USD': 45000},
+    {'Year': 2022, 'Institution': 'Imperial College London', 'Country': 'UK', 'lat': 51.4988, 'lon': -0.1749, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 170, 'Tuition_USD': 47000},
+    {'Year': 2023, 'Institution': 'Imperial College London', 'Country': 'UK', 'lat': 51.4988, 'lon': -0.1749, 'Program': 'B.S. / M.S. Statistics', 'Graduates': 190, 'Tuition_USD': 49000},
     # NUS
-    {'Year': 2021, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 120, 'Tuition_USD': 30000},
-    {'Year': 2022, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 160, 'Tuition_USD': 32000},
-    {'Year': 2023, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'Program': 'M.S. AI / Machine Learning', 'Graduates': 200, 'Tuition_USD': 35000},
+    {'Year': 2021, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'lat': 1.2966, 'lon': 103.7764, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 120, 'Tuition_USD': 30000},
+    {'Year': 2022, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'lat': 1.2966, 'lon': 103.7764, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 160, 'Tuition_USD': 32000},
+    {'Year': 2023, 'Institution': 'National Univ. of Singapore', 'Country': 'Singapore', 'lat': 1.2966, 'lon': 103.7764, 'Program': 'M.S. AI / Machine Learning', 'Graduates': 200, 'Tuition_USD': 35000},
     # UofT
-    {'Year': 2021, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 300, 'Tuition_USD': 40000},
-    {'Year': 2022, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 350, 'Tuition_USD': 42000},
-    {'Year': 2023, 'Institution': 'University of Toronto', 'Country': 'Canada', 'Program': 'B.S. / M.S. Data Science', 'Graduates': 420, 'Tuition_USD': 45000},
+    {'Year': 2021, 'Institution': 'University of Toronto', 'Country': 'Canada', 'lat': 43.6629, 'lon': -79.3957, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 300, 'Tuition_USD': 40000},
+    {'Year': 2022, 'Institution': 'University of Toronto', 'Country': 'Canada', 'lat': 43.6629, 'lon': -79.3957, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 350, 'Tuition_USD': 42000},
+    {'Year': 2023, 'Institution': 'University of Toronto', 'Country': 'Canada', 'lat': 43.6629, 'lon': -79.3957, 'Program': 'B.S. / M.S. Data Science', 'Graduates': 420, 'Tuition_USD': 45000},
 ])
 institutions = df_supply['Institution'].unique().tolist()
 job_titles = ['Data Scientist', 'AI Engineer', 'Data Analyst', 'Statistician']
@@ -290,7 +290,7 @@ def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
             html.Div([
-                html.Label("Filter by Institution (Click on any chart to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
+                html.Label("Filter by Institution (Click on any chart/map to filter as well!):", style={'color': '#FFFFFF', 'fontWeight': 'bold', 'marginBottom': '10px'}),
                 dcc.Dropdown(
                     id='supply-institution-filter',
                     options=[{'label': f"{i} ({df_supply[df_supply['Institution'] == i]['Country'].iloc[0]})", 'value': i} for i in institutions],
@@ -299,6 +299,15 @@ def render_content(tab):
                     style=dropdown_style
                 )
             ], style=card_style),
+            
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        dcc.Graph(id='fig-map'),
+                        html.P("Source: Approximated global distribution of institutions and their graduate output.", style={'color': '#8A8A93', 'fontSize': '12px', 'marginTop': '10px'})
+                    ], style=card_style)
+                ], width=12)
+            ]),
             
             dbc.Row([
                 dbc.Col([
@@ -314,6 +323,7 @@ def render_content(tab):
                     ], style=card_style)
                 ], width=6)
             ]),
+            
             dbc.Row([
                 dbc.Col([
                     html.Div([
@@ -418,20 +428,22 @@ def render_content(tab):
 # ------------------------------------------------------------------------------
 @app.callback(
     Output('supply-institution-filter', 'value'),
-    [Input('fig-graduates', 'clickData'),
+    [Input('fig-map', 'clickData'),
+     Input('fig-graduates', 'clickData'),
      Input('fig-tuition', 'clickData'),
      Input('fig-employment', 'clickData')],
     [State('supply-institution-filter', 'value')],
     prevent_initial_call=True
 )
-def cross_filter_tab1_clicks(clk_grad, clk_tuit, clk_emp, current_selection):
+def cross_filter_tab1_clicks(clk_map, clk_grad, clk_tuit, clk_emp, current_selection):
     ctx = dash.callback_context
     if not ctx.triggered:
         raise dash.exceptions.PreventUpdate
     prop_id = ctx.triggered[0]['prop_id']
     click_data = None
     
-    if 'fig-graduates' in prop_id: click_data = clk_grad
+    if 'fig-map' in prop_id: click_data = clk_map
+    elif 'fig-graduates' in prop_id: click_data = clk_grad
     elif 'fig-tuition' in prop_id: click_data = clk_tuit
     elif 'fig-employment' in prop_id: click_data = clk_emp
         
@@ -476,7 +488,8 @@ def cross_filter_tab2_clicks(clk_open, clk_sal, current_selection):
 # Tab Rendering Callbacks
 # ------------------------------------------------------------------------------
 @app.callback(
-    [Output('fig-graduates', 'figure'),
+    [Output('fig-map', 'figure'),
+     Output('fig-graduates', 'figure'),
      Output('fig-tuition', 'figure'),
      Output('fig-employment', 'figure'),
      Output('curriculum-table', 'data')],
@@ -490,6 +503,30 @@ def update_tab1(selected_inst):
     filtered_emp = df_employment[df_employment['Institution'].isin(selected_inst)]
     filtered_curr = df_curriculum[df_curriculum['Institution'].isin(selected_inst)]
     
+    # 1. Map Figure
+    agg_map = filtered_supply.groupby(['Institution', 'Country', 'lat', 'lon'])['Graduates'].sum().reset_index()
+    fig_map = px.scatter_geo(
+        agg_map, 
+        lat='lat', lon='lon', 
+        color='Institution',
+        size='Graduates',
+        hover_name='Institution',
+        hover_data={'Country': True, 'Graduates': True, 'lat': False, 'lon': False},
+        title='Global Distribution of Graduates Produced by Institution',
+        custom_data=['Institution'],
+        color_discrete_sequence=THEME_PALETTE,
+        projection='natural earth'
+    )
+    
+    fig_map = apply_theme(fig_map)
+    fig_map.update_geos(
+        bgcolor='rgba(0,0,0,0)',
+        showland=True, landcolor='#222228',
+        showocean=True, oceancolor='#0A0A0C',
+        showcountries=True, countrycolor='#2E2E36',
+        showframe=False
+    )
+    
     fig_grad = px.line(filtered_supply, x='Year', y='Graduates', color='Institution', custom_data=['Institution'], markers=True, title='Graduates Trend by Institution', color_discrete_sequence=THEME_PALETTE)
     fig_grad = apply_theme(fig_grad)
     
@@ -500,7 +537,7 @@ def update_tab1(selected_inst):
     fig_emp = px.bar(filtered_emp, x='Institution', y='Employed_Pct', color='Year_Post_Grad', barmode='group', custom_data=['Institution'], title='Employment Rate Post-Graduation (%)', color_discrete_sequence=THEME_PALETTE)
     fig_emp = apply_theme(fig_emp)
     
-    return fig_grad, fig_tuit, fig_emp, filtered_curr.to_dict('records')
+    return fig_map, fig_grad, fig_tuit, fig_emp, filtered_curr.to_dict('records')
 
 
 @app.callback(
